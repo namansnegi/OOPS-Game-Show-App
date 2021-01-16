@@ -12,6 +12,7 @@
         this.activePhrase = null;
  	}
  	getRandomPhrase(){
+
         const randomNum=Math.floor(Math.random()*this.phrases.length);
         return this.phrases[randomNum];
     }
@@ -19,6 +20,7 @@
     // startGame function calls the getRandomPhrase() method, and adds that phrase to the board by calling the
     // Phrase class' addPhraseToDisplay() method.
     startGame(){
+
         document.getElementById('overlay').style.display = 'none';
 
     	this.activePhrase = this.getRandomPhrase();
@@ -37,11 +39,12 @@
         if (this.activePhrase.phrase.includes(button.textContent)){
             button.classList.add('chosen');
             this.activePhrase.showMatchedLetter(button);
-            this.checkforwin();
+            if (this.checkForWin()){
+                this.gameOver()
+            }
         }else {
             button.classList.add('wrong');
             this.removeLife();
-
         }
 
     }
@@ -55,12 +58,12 @@
         let changeNo = 5 - this.missed;
         imageList[changeNo].src = 'images/lostHeart.png';
         if (this.missed === 5){
-            this.gameover();
+            this.gameOver();
         }
     }
 
     //this method checks to see if the player has selected all of the letters of the phrase.
-    checkforwin(){
+    checkForWin(){
         let win = true
         let shownPhrase = document.querySelectorAll("#phrase li");
        
@@ -72,23 +75,20 @@
             }
         }
 
-        if (win){
-            this.gameover();
-        }
-
+        return win;
     }
 
     //this method displays a message if the player wins or a different message if they lose and resets the game parameters.
-    gameover(){
+    gameOver(){
 
-        document.getElementById('overlay').classList.remove('start')
+        //document.getElementById('overlay').classList.remove('start')
 
         if (this.missed === 5){
             document.getElementById('overlay').children[1].textContent = "Sorry you lost. Better luck next time";
-            document.getElementById('overlay').classList.add('lose')
+            document.getElementById('overlay').className = 'lose';
         }else {
             document.getElementById('overlay').children[1].textContent = "Well done. You won";
-            document.getElementById('overlay').classList.add('win')
+            document.getElementById('overlay').className = 'win';
         }
 
         document.getElementById('overlay').style.display = '';
